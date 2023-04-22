@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+<div class="container">
+    <h1>
+        {% trans "Cajas" %}
+    </h1>
+    <ul>
+    {% for caja in caja_list %}
+    <li><a href="{% url 'caja:caja_detail' caja.pk %}">{{caja.name}}</a> (${{caja.balance|default_if_none:0}})</li>
+    {% endfor %}
+    </ul>
+</div>
+{% endblock content %}

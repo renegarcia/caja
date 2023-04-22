@@ -1,0 +1,23 @@
+{% extends '_base.html' %}
+{% load i18n %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="container d-flex align-items-center justify-content-center" style="height:80vh;">
+    <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">
+            {% trans "Seguro que deseas cancelar el siguiente registro?" %}
+          </h5>
+          {{object}}
+        </div>
+        <div class="card-footer d-flex justify-content-end">
+            <form method="post">
+                {% csrf_token %}
+                <a class="btn btn-secondary" href="{% url "caja:caja_detail" pk=object.caja.pk %}">{% trans "No, regresar" %}</a>
+                <button type="submit" class="btn btn-danger">{% trans "Sí, Cancelar" %}</button>
+            </form>
+        </div>
+      </div>
+</div>
+{% endblock content %}

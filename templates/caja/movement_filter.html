@@ -1,0 +1,72 @@
+{% extends '_base.html' %}
+{% load i18n %}
+{% load render_table from django_tables2 %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="container">
+    <div>
+        <h1>
+            {% trans "Caja" %} {{caja.pk}}
+        </h1>
+        <button 
+            type="button" 
+            class="btn btn-primary position-fixed bottom-0 mb-2 me-3 end-0" 
+            data-bs-toggle="modal" 
+            data-bs-target="#addMovement"
+            data-mdb-toggle="modal" 
+            data-mdb-target="#addMovement"
+            style="z-index:2;"
+        >
+            +
+            {% trans "Agregar" %}
+        </button>
+
+        <div class="modal fade" id="addMovement" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">{% trans "Agregar movimiento" %}</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" data-mdb-dismiss="modal" aria-label="{% trans 'Cancelar' %}"></button>
+                </div>
+                <form 
+                    method="post" 
+                    class="form"
+                    action="{% url 'caja:movement_new' caja.pk %}"
+                >
+                    <div class="modal-body">
+                            {% csrf_token %}
+                            {% bootstrap_form form %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-mdb-dismiss="modal">{% trans "Cancelar" %}</button>
+                        {% bootstrap_button button_type="submit" content="Agregar" %}
+                    </div>
+                </form>        
+              </div>
+            </div>
+        </div>
+        {% if filter %}
+        <div class="d-flex justify-content-between mb-3">
+            <button class="btn btn-link" type="button" data-mdb-toggle="collapse" data-mdb-target="#filters" aria-expanded="false" aria-controls="collapseExample">
+                {% trans "Filtros" %}
+            </button>
+            <h3>Total: ${{caja.balance|default_if_none:0}}</h3>
+        </div>
+        <div class="collapse border mb-4" id="filters">
+            <div class="card w-50 d-flex justify-content-end">
+                <div class="card-body">
+                    <form action="" method="get" class="form form-inline">
+                    {% bootstrap_form filter.form %}
+                    {% bootstrap_button 'filtrar' %}
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="card">
+            {% render_table table %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
