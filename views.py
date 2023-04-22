@@ -6,15 +6,16 @@ from django_filters.views import FilterView
 from django.shortcuts import reverse
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView, CreateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django_tables2 import SingleTableMixin
 
 
-class CajaListView(ListView):
+class CajaListView(LoginRequiredMixin, ListView):
     model = Caja
 
 
-class CajaDetailView(SingleTableMixin, FilterView):
+class CajaDetailView(LoginRequiredMixin, SingleTableMixin, FilterView):
     model = Movement
     table_class = MovementTable
     filterset_class = MovementFilter
@@ -31,7 +32,7 @@ class CajaDetailView(SingleTableMixin, FilterView):
         return context
 
 
-class MovementCreateView(CreateView):
+class MovementCreateView(LoginRequiredMixin, CreateView):
     model = Movement
     fields = "__all__"
     http_method_names = ("post",)
@@ -53,7 +54,7 @@ class MovementCreateView(CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class MovementCancelView(DeleteView):
+class MovementCancelView(LoginRequiredMixin, DeleteView):
     model = Movement
     template_name = "caja/movement_confirm_cancel.html"
 
