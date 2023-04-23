@@ -1,15 +1,53 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load django_bootstrap5 %}
 
 {% block content %}
-<div class="container">
-    <h1>
-        {% trans "Cajas" %}
-    </h1>
-    <ul>
-    {% for caja in caja_list %}
-    <li><a href="{% url 'caja:caja_detail' caja.pk %}">{{caja.name}}</a> (${{caja.balance|default_if_none:0}})</li>
-    {% endfor %}
-    </ul>
-</div>
+    <button 
+        type="button" 
+        class="btn btn-primary position-fixed bottom-0 mb-2 me-3 end-0" 
+        data-bs-toggle="modal" 
+        data-bs-target="#addCaja"
+        data-mdb-toggle="modal" 
+        data-mdb-target="#addCaja"
+        style="z-index:2;"
+    >
+        +
+        {% trans "Agregar" %}
+    </button>
+
+    <div class="modal fade" id="addCaja" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">{% trans "Agregar Caja" %}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" data-mdb-dismiss="modal" aria-label="{% trans 'Cancelar' %}"></button>
+        </div>
+        <form 
+            method="post" 
+            class="form"
+            action="{% url 'caja:caja_new' %}"
+        >
+            <div class="modal-body">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-mdb-dismiss="modal">{% trans "Cancelar" %}</button>
+                {% bootstrap_button button_type="submit" content="Agregar" %}
+            </div>
+        </form>        
+    </div>
+    </div>
+    </div>
+    <div class="container">
+        <h1>
+            {% trans "Cajas" %}
+        </h1>
+        <ul>
+        {% for caja in caja_list %}
+        <li><a href="{% url 'caja:caja_detail' caja.pk %}">{{caja.name}}</a> (${{caja.balance|default_if_none:0}})</li>
+        {% endfor %}
+        </ul>
+    </div>
 {% endblock content %}

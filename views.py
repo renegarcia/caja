@@ -4,6 +4,7 @@ from .forms import MovementForm
 from .filters import MovementFilter
 from django_filters.views import FilterView
 from django.shortcuts import reverse
+from django.forms import modelform_factory
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView, CreateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -13,6 +14,27 @@ from django_tables2 import SingleTableMixin
 
 class CajaListView(LoginRequiredMixin, ListView):
     model = Caja
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = modelform_factory(self.model, fields=("name",))
+        return context
+
+    def get_queryset(self):
+        return super().get_queryset().filter(user=self.request.user)
+
+
+class CajaCreateView(LoginRequiredMixin, CreateView):
+    model = Caja
+    fields = ("name",)
+    http_method_names = ("post",)
+
+    def form_valid(self, form):
+        caja = form.save(commit=False)
+        caja.user = self.request.user
+        caja.save()
+        self.object = caja
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class CajaDetailView(LoginRequiredMixin, SingleTableMixin, FilterView):
