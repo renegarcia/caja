@@ -4,10 +4,13 @@
 {% load django_bootstrap5 %}
 
 {% block content %}
-<div class="container">
+<div class="container mt-3">
     <div>
         <h1>
-            {% trans "Caja" %} {{caja.pk}}
+            {{caja.name|title}}
+            <a href="#" class="text-body">
+                <span style="font-size:15px;"><i class="fa-solid fa-pen-to-square"></i></span>
+            </a>
         </h1>
         <button 
             type="button" 
@@ -51,7 +54,7 @@
             <button class="btn btn-link" type="button" data-mdb-toggle="collapse" data-mdb-target="#filters" aria-expanded="false" aria-controls="collapseExample">
                 {% trans "Filtros" %}
             </button>
-            <h3>Total: ${{caja.balance|default_if_none:0}}</h3>
+            <h3>Total: <span {% if caja.balance and caja.balance < 0 %}class="text-danger"{% endif %}>${{caja.balance|default_if_none:0}}</span></h3>
         </div>
         <div class="collapse border mb-4" id="filters">
             <div class="card w-50 d-flex justify-content-end">

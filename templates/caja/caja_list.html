@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load static %}
 {% load django_bootstrap5 %}
 
 {% block content %}
@@ -40,14 +41,26 @@
     </div>
     </div>
     </div>
-    <div class="container">
-        <h1>
+    <div class="container mt-3">
+        <h1 class="py-3">
             {% trans "Cajas" %}
         </h1>
-        <ul>
-        {% for caja in caja_list %}
-        <li><a href="{% url 'caja:caja_detail' caja.pk %}">{{caja.name}}</a> (${{caja.balance|default_if_none:0}})</li>
-        {% endfor %}
-        </ul>
-    </div>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for caja in caja_list %}
+            <div class="col">
+                <div class="card h-100">
+                    <img src="{% static 'caja/card-banner.jpg' %}" class="card-img-top" alt="{% trans "Caja" %}"/>
+                    <div class="card-body">
+                        <h5 class="card-title">{{caja.name}}</h5>
+                        <p class="card-text text-center display-6">
+                            <span {% if caja.balance and caja.balance < 0 %}class="text-danger"{% endif %}>${{caja.balance|default_if_none:0}}</span>
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{caja.get_absolute_url}}" class="btn btn-primary float-end">{% trans "Ver" %}</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
 {% endblock content %}

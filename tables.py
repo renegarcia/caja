@@ -19,7 +19,7 @@ class MovementTable(Table):
 
     class Meta:
         model = Movement
-        template_name = "django_tables2/bootstrap4.html"
+        template_name = "django_tables2/bootstrap5-responsive.html"
         fields = (
             "date",
             "desc",
