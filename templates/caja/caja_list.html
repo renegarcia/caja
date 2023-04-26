@@ -4,6 +4,7 @@
 {% load django_bootstrap5 %}
 
 {% block content %}
+    {# caja_new modal #}
     <button 
         type="button" 
         class="btn btn-primary position-fixed bottom-0 mb-2 me-3 end-0" 
@@ -18,29 +19,30 @@
     </button>
 
     <div class="modal fade" id="addCaja" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">{% trans "Agregar Caja" %}</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" data-mdb-dismiss="modal" aria-label="{% trans 'Cancelar' %}"></button>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">{% trans "Agregar Caja" %}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" data-mdb-dismiss="modal" aria-label="{% trans 'Cancelar' %}"></button>
+                </div>
+                <form 
+                    method="post" 
+                    class="form"
+                    action="{% url 'caja:caja_new' %}"
+                >
+                    <div class="modal-body">
+                            {% csrf_token %}
+                            {% bootstrap_form form %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-mdb-dismiss="modal">{% trans "Cancelar" %}</button>
+                        {% bootstrap_button button_type="submit" content="Agregar" %}
+                    </div>
+                </form>        
+            </div>
         </div>
-        <form 
-            method="post" 
-            class="form"
-            action="{% url 'caja:caja_new' %}"
-        >
-            <div class="modal-body">
-                    {% csrf_token %}
-                    {% bootstrap_form form %}
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-mdb-dismiss="modal">{% trans "Cancelar" %}</button>
-                {% bootstrap_button button_type="submit" content="Agregar" %}
-            </div>
-        </form>        
     </div>
-    </div>
-    </div>
+    {# End caja_new modal #}
     <div class="container mt-3">
         <h1 class="py-3">
             {% trans "Cajas" %}
@@ -49,15 +51,20 @@
             {% for caja in caja_list %}
             <div class="col">
                 <div class="card h-100">
-                    <img src="{% static 'caja/card-banner.jpg' %}" class="card-img-top" alt="{% trans "Caja" %}"/>
                     <div class="card-body">
-                        <h5 class="card-title">{{caja.name}}</h5>
+                        <h2 class="card-title text-center">{{caja.name}}</h2>
                         <p class="card-text text-center display-6">
                             <span {% if caja.balance and caja.balance < 0 %}class="text-danger"{% endif %}>${{caja.balance|default_if_none:0}}</span>
                         </p>
                     </div>
                     <div class="card-footer">
-                        <a href="{{caja.get_absolute_url}}" class="btn btn-primary float-end">{% trans "Ver" %}</a>
+                        <a href="{{caja.get_absolute_url}}" class="btn btn-primary">{% trans "Ver" %}</a>
+                        <a
+                            href="{% url 'caja:caja_delete' caja.pk %}"
+                            class="text-danger float-end" 
+                        >
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
                     </div>
                 </div>
             </div>

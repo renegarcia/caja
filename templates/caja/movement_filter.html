@@ -4,12 +4,45 @@
 {% load django_bootstrap5 %}
 
 {% block content %}
+<div class="modal fade" id="updateCaja" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">{% trans "Editar Caja" %}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" data-mdb-dismiss="modal" aria-label="{% trans 'Cancelar' %}"></button>
+            </div>
+            <form 
+                method="post" 
+                class="form"
+                action="{% url 'caja:caja_update' caja.pk %}"
+            >
+                <div class="modal-body">
+                    {% csrf_token %}
+                    {% bootstrap_form caja_update_form %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-mdb-dismiss="modal">{% trans "Cancelar" %}</button>
+                    {% bootstrap_button button_type="submit" content="Aceptar" %}
+                </div>
+            </form>        
+        </div>
+    </div>
+</div>
+
 <div class="container mt-3">
     <div>
         <h1>
             {{caja.name|title}}
-            <a href="#" class="text-body">
-                <span style="font-size:15px;"><i class="fa-solid fa-pen-to-square"></i></span>
+            <a
+                href="#"
+                class="text-body" 
+                data-bs-toggle="modal" 
+                data-bs-target="#updateCaja"
+                data-mdb-toggle="modal" 
+                data-mdb-target="#updateCaja"
+                style="z-index:2;"
+            >
+                <span class="fs-6 text-muted"><i class="fa-solid fa-pen-to-square"></i></span>
             </a>
         </h1>
         <button 
