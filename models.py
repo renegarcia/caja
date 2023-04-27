@@ -4,7 +4,7 @@ from django.shortcuts import reverse
 
 
 class Caja(models.Model):
-    name = models.CharField(_("Nombre"), max_length=50)
+    name = models.CharField(_("Nombre"), max_length=250)
     balance = models.DecimalField(
         _("Total"), max_digits=8, decimal_places=2, null=False, blank=True, default=0
     )
