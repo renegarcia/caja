@@ -38,7 +38,7 @@ class Movement(models.Model):
     )
     caja = models.ForeignKey("Caja", verbose_name=_("Caja"), on_delete=models.CASCADE)
     date = models.DateField(_("Fecha"), auto_now=False, auto_now_add=False)
-    desc = models.CharField(_("Concepto"), max_length=25)
+    desc = models.CharField(_("Concepto"), max_length=80)
     # comment = models.TextField(_("Comentario"), null=True, blank=True)
     qty = models.DecimalField(_("Monto"), max_digits=7, decimal_places=2)
     type = models.CharField(_("Tipo de movimiento"), max_length=3, choices=TYPE)
